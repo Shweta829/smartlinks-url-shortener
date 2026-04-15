@@ -14,7 +14,6 @@ A modern, feature-rich URL shortener web application built with Flask. Create sh
 - **URL Shortening** - Convert long URLs into short, memorable links
 - **Custom Short URLs** - Create custom short codes for your links
 - **Link Management** - View, edit, and delete your shortened URLs
-- **QR Codes** - Generate QR codes for easy sharing
 
 ### 📊 Analytics & Statistics
 - **Click Tracking** - Monitor how many times each link is clicked
