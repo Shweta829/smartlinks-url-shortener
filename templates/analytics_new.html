@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Link Analytics - SmartLinks</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+</head>
+<body>
+
+<div class="analytics-container">
+  <nav class="navbar">
+    <div class="logo">🔗 SmartLinks</div>
+    <div class="nav-links">
+      <a href="/dashboard" class="nav-link">📋 Dashboard</a>
+      <span class="user-info" id="userInfo"></span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <div class="analytics-main">
+    <div class="analytics-header">
+      <h1>📊 Link Analytics</h1>
+      <p class="subtitle">Track clicks and visitor statistics for your shortened URLs</p>
+    </div>
+
+    <div class="search-section">
+      <div class="search-box">
+        <input 
+          type="text" 
+          id="codeInput" 
+          placeholder="Enter short code (e.g., numpy-lib)" 
+          class="search-input"
+        >
+        <button onclick="loadStats()" class="btn-search">🔍 Load Analytics</button>
+        <button onclick="loadAllStats()" class="btn-search secondary">📈 All URLs</button>
+      </div>
+    </div>
+
+    <div class="stats-cards" id="statsCards" style="display: none;">
+      <div class="stat-card">
+        <div class="stat-icon">📍</div>
+        <div class="stat-content">
+          <div class="stat-label">Total Clicks</div>
+          <div class="stat-number" id="totalClicks">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🌐</div>
+        <div class="stat-content">
+          <div class="stat-label">Browsers</div>
+          <div class="stat-number" id="uniqueBrowsers">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💻</div>
+        <div class="stat-content">
+          <div class="stat-label">Operating Systems</div>
+          <div class="stat-number" id="uniqueOS">0</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔗</div>
+        <div class="stat-content">
+          <div class="stat-label">Short Code</div>
+          <div class="stat-number" id="shortCodeDisplay" style="font-size: 14px;">-</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-container" id="chartsContainer" style="display: none;">
+      <div class="chart-row">
+        <div class="chart-card">
+          <h3>🌐 Browser Distribution</h3>
+          <canvas id="browserChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>💻 OS Distribution</h3>
+          <canvas id="osChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-row">
+        <div class="chart-card full-width">
+          <h3>📊 Top Performers</h3>
+          <canvas id="topPerformersChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="overview-section" id="overviewSection" style="display: none;">
+      <h2>📋 Your Shortened URLs Overview</h2>
+      <div class="urls-grid" id="urlsGrid"></div>
+    </div>
+
+    <div class="message" id="message" style="display: none;"></div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+
+</body>
+</html>

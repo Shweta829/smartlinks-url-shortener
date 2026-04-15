@@ -1,0 +1,138 @@
+[
+  {
+    "id": 1,
+    "user_id": "1",
+    "original_url": "https://docs.python.org/3/library/index.html",
+    "short_code": "3pU8wi",
+    "created_at": "2026-04-12T15:02:18.718728",
+    "clicks": 0
+  },
+  {
+    "id": 2,
+    "user_id": "1",
+    "original_url": "https://www.numpy.org/",
+    "short_code": "numpy-lib",
+    "created_at": "2026-04-12T15:05:17.222821",
+    "clicks": 1
+  },
+  {
+    "id": 3,
+    "user_id": "2",
+    "original_url": "https://chatgpt.com/c/69da7cd9-5e48-8323-b545-8a2fa5651050",
+    "short_code": "xDXi6e",
+    "created_at": "2026-04-12T15:07:04.180555",
+    "clicks": 0
+  },
+  {
+    "id": 4,
+    "user_id": "2",
+    "original_url": "https://chatgpt.com/c/69da7cd9-5e48-8323-b545-8a2fa5651050",
+    "short_code": "A2ruyq",
+    "created_at": "2026-04-12T15:22:19.764586",
+    "clicks": 0
+  },
+  {
+    "id": 5,
+    "user_id": "2",
+    "original_url": "https://chatgpt.com/c/69da7cd9-5e48-8323-b545-8a2fa5651050",
+    "short_code": "JTGsOY",
+    "created_at": "2026-04-12T15:22:42.709135",
+    "clicks": 0
+  },
+  {
+    "id": 6,
+    "user_id": "2",
+    "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+    "short_code": "Tgf5Pq",
+    "created_at": "2026-04-12T15:30:02.627568",
+    "clicks": 0
+  },
+  {
+    "id": 7,
+    "user_id": "2",
+    "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+    "short_code": "1RSmDt",
+    "created_at": "2026-04-12T15:31:21.999527",
+    "clicks": 3
+  },
+  {
+    "id": 8,
+    "user_id": "2",
+    "original_url": "https://jobcode.in/#google_vignette",
+    "short_code": "zot3SL",
+    "created_at": "2026-04-13T12:31:02.546589",
+    "clicks": 0
+  },
+  {
+    "id": 9,
+    "user_id": "2",
+    "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+    "short_code": "yl1FG0",
+    "created_at": "2026-04-13T12:39:50.808192",
+    "clicks": 0
+  },
+  {
+    "id": 10,
+    "user_id": "2",
+    "original_url": "https://chatgpt.com/c/69da7cd9-5e48-8323-b545-8a2fa5651050",
+    "short_code": "0xswMb",
+    "created_at": "2026-04-13T12:49:01.380305",
+    "clicks": 0
+  },
+  {
+    "id": 11,
+    "user_id": "2",
+    "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+    "short_code": "fuLXLa",
+    "created_at": "2026-04-13T12:53:39.707969",
+    "clicks": 0
+  },
+  {
+    "id": 12,
+    "user_id": "2",
+    "original_url": "https://jobcode.in/#google_vignette",
+    "short_code": "nIYaST",
+    "created_at": "2026-04-13T13:03:57.184654",
+    "clicks": 0
+  },
+  {
+    "id": 13,
+    "user_id": "2",
+    "original_url": "https://jobcode.in/#google_vignette",
+    "short_code": "3s1A2k",
+    "created_at": "2026-04-13T13:17:56.473449",
+    "clicks": 0
+  },
+  {
+    "id": 14,
+    "user_id": "2",
+    "original_url": "https://github.com/",
+    "short_code": "3WSbrY",
+    "created_at": "2026-04-13T13:30:31.921844",
+    "clicks": 0
+  },
+  {
+    "id": 15,
+    "user_id": "2",
+    "original_url": "https://home.atlassian.com/o/2f4aa0ef-39fa-4194-b664-f2ab92482e1f/?utm_source=identity&cloudId=628a7672-1fdd-48d7-b570-65b44be408a8",
+    "short_code": "W4uhNn",
+    "created_at": "2026-04-13T13:39:44.226338",
+    "clicks": 0
+  },
+  {
+    "id": 16,
+    "user_id": "2",
+    "original_url": "https://home.atlassian.com/o/2f4aa0ef-39fa-4194-b664-f2ab92482e1f/?utm_source=identity&cloudId=628a7672-1fdd-48d7-b570-65b44be408a8",
+    "short_code": "u6DMI6",
+    "created_at": "2026-04-13T13:39:54.710510",
+    "clicks": 0
+  },
+  {
+    "id": 17,
+    "user_id": "2",
+    "original_url": "https://infyspringboard.onwingspan.com/web/en/login?ref=%2Fapp%2Ftoc%2Flex_auth_0125409616243425281061_shared%2Foverview",
+    "short_code": "wgvvKT",
+    "created_at": "2026-04-13T21:16:03.679148",
+    "clicks": 4
+  }
+]

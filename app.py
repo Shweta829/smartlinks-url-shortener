@@ -1,77 +1,66 @@
-from flask import Flask, request, jsonify, redirect, render_template
-import mysql.connector
-import random, string
-from user_agents import parse
+from flask import Flask,render_template
+from flask_cors import CORS
 
-app = Flask(__name__)
+from config import Config
+from extensions import mysql,bcrypt,jwt
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="Sony@0110",
-    database="smartlinks_db"
-)
-cursor = db.cursor(dictionary=True)
+from routes.auth import auth_bp
+from routes.url import url_bp
+from routes.stats import stats_bp
 
-def generate_code(length=6):
-    return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+app=Flask(__name__)
+
+app.config.from_object(Config)
+
+# CORS configuration
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+# Initialize extensions
+mysql.init_app(app)
+bcrypt.init_app(app)
+jwt.init_app(app)
+
+# JWT error handlers
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return {"message": "Token has expired"}, 401
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return {"message": "Invalid token"}, 401
+
+@jwt.unauthorized_loader
+def missing_token_callback(error):
+    return {"message": "Authorization required"}, 401
+
+# Register blueprints
+app.register_blueprint(auth_bp)
+app.register_blueprint(url_bp)
+app.register_blueprint(stats_bp)
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
-@app.route("/shorten", methods=["POST"])
-def shorten():
-    data = request.get_json()
-    long_url = data.get("url")
-    if not long_url:
-        return jsonify({"error": "URL required"}), 400
+@app.route("/login")
+def login_page():
+    return render_template("login.html")
 
-    code = generate_code()
-    cursor.execute(
-        "INSERT INTO urls (original_url, short_code) VALUES (%s, %s)",
-        (long_url, code)
-    )
-    db.commit()
-    return jsonify({"short_url": f"http://localhost:5000/{code}", "code": code})
+@app.route("/register")
+def register_page():
+    return render_template("register.html")
 
-@app.route("/<short_code>")
-def redirect_url(short_code):
-    cursor.execute("SELECT * FROM urls WHERE short_code=%s", (short_code,))
-    url = cursor.fetchone()
-    if not url:
-        return "Invalid Link", 404
+@app.route("/forgot")
+def forgot_page():
+    return render_template("forgot_password.html")
 
-    ua = parse(request.headers.get("User-Agent"))
-    cursor.execute(
-        "INSERT INTO clicks (url_id, browser, os) VALUES (%s, %s, %s)",
-        (url["id"], ua.browser.family, ua.os.family)
-    )
-    db.commit()
-    return redirect(url["original_url"])
+@app.route("/dashboard")
+def dashboard_page():
+    return render_template("dashboard.html")
 
-@app.route("/stats/<short_code>")
-def stats(short_code):
-    cursor.execute("SELECT id FROM urls WHERE short_code=%s", (short_code,))
-    url = cursor.fetchone()
-    if not url:
-        return jsonify({"error": "Not found"}), 404
+@app.route("/analytics")
+def analytics_page():
+    return render_template("analytics.html")
 
-    url_id = url["id"]
-    cursor.execute("SELECT COUNT(*) total FROM clicks WHERE url_id=%s", (url_id,))
-    total = cursor.fetchone()["total"]
-
-    cursor.execute("SELECT browser, COUNT(*) count FROM clicks WHERE url_id=%s GROUP BY browser", (url_id,))
-    browsers = cursor.fetchall()
-
-    cursor.execute("SELECT os, COUNT(*) count FROM clicks WHERE url_id=%s GROUP BY os", (url_id,))
-    os_data = cursor.fetchall()
-
-    return jsonify({"total": total, "browsers": browsers, "os": os_data})
-
-@app.route("/dashboard/<code>")
-def dashboard(code):
-    return render_template("stats.html", code=code)
-
-if __name__ == "__main__":
+if __name__=="__main__":
     app.run(debug=True)

@@ -1,0 +1,18 @@
+{
+  "1": {
+    "id": "1",
+    "username": "Alice Johnson",
+    "email": "alice@example.com",
+    "password": "$2b$12$b4gm.IoSW4Xz.ZcrLN606OzR1uZGARr/An1LH6i0kKQp8qhiShEg.",
+    "created_at": "2026-04-12T14:44:30.641136",
+    "reset_token": null
+  },
+  "2": {
+    "id": "2",
+    "username": "Shweta",
+    "email": "shwetabhikamale89@gmail.com",
+    "password": "$2b$12$oECGnwGS7Q8N69vRH48B3ezCGBtiEXmvVIkaYEGfo47O7Sd1dRoE.",
+    "created_at": "2026-04-12T14:49:23.629285",
+    "reset_token": null
+  }
+}
