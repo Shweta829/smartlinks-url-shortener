@@ -1,246 +1,145 @@
-# 🔗 SmartLinks
+﻿# 🔗 SmartLinks
 
-A modern, feature-rich URL shortener web application built with Flask. Create short, shareable links with advanced analytics, user authentication, and interactive dashboards.
+A Flask-based URL shortener with user authentication, link history, and click tracking. The application stores data locally in JSON and supports frontend pages plus API endpoints.
 
 ## ✨ Features
 
-### 🔐 Authentication System
-- **User Registration** - Create accounts with email validation and password strength checking
-- **Secure Login** - JWT-based authentication with token management
-- **Password Recovery** - Forgot password functionality with email verification
-- **Real-time Validation** - Interactive form validation with instant feedback
-
-### 🔗 URL Management
-- **URL Shortening** - Convert long URLs into short, memorable links
-- **Custom Short URLs** - Create custom short codes for your links
-- **Link Management** - View, edit, and delete your shortened URLs
-
-### 📊 Analytics & Statistics
-- **Click Tracking** - Monitor how many times each link is clicked
-- **Visitor Analytics** - Track visitor information (location, device, browser)
-- **Detailed Reports** - Comprehensive analytics dashboard for each URL
-- **Performance Metrics** - View trends and statistics over time
-
-### 🎨 User Interface
-- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
-- **Interactive Dashboard** - Manage and monitor all your links in one place
-- **Real-time Updates** - Live analytics and statistics
-- **Dark/Light Mode** - Switchable theme for comfortable viewing
+- **User registration** with email validation and secure password hashing
+- **Login** with JWT-based authentication
+- **Forgot password** via reset token
+- **URL shortening** with automatic short-code generation
+- **Personal link history** for authenticated users
+- **Redirect tracking** for short URLs
+- **Interactive dashboard and analytics pages**
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Python 3.8 or higher
-- pip package manager
-- MySQL database (required for persistence)
+- pip
 
 ### Installation
 
-1. **Clone or Download the Project**
+1. Open a terminal and go to the project folder:
 ```bash
 cd SmartLinks_Project
 ```
 
-2. **Create a Virtual Environment** (Recommended)
+2. Create and activate a virtual environment:
 ```bash
 python -m venv venv
-.\venv\Scripts\activate  # On Windows
-# or
-source venv/bin/activate  # On macOS/Linux
+.\venv\Scripts\activate
 ```
 
-3. **Install Dependencies**
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Configure Database**
-   - Edit `config.py` to set up your MySQL database connection
-   - The application now uses MySQL storage for users and URLs instead of JSON files
-
-5. **Run the Application**
+4. Run the application:
 ```bash
 python app.py
 ```
 
-6. **Access the Application**
-   - Open your browser and navigate to `http://127.0.0.1:5000`
-   - Register a new account to get started
+5. Open your browser:
+```text
+http://127.0.0.1:5000
+```
 
 ## 📁 Project Structure
 
 ```
 SmartLinks_Project/
-├── app.py                          # Main Flask application entry point
-├── config.py                       # Configuration settings
-├── extensions.py                   # Flask extensions initialization
-├── requirements.txt                # Python dependencies
-├── README.md                       # This file
-│
+├── app.py
+├── config.py
+├── extensions.py
+├── requirements.txt
+├── README.md
+├── data.json
 ├── routes/
-│   ├── __init__.py
-│   ├── auth.py                     # Authentication endpoints (login, register, forgot password)
-│   ├── url.py                      # URL shortening and management endpoints
-│   └── stats.py                    # Analytics and statistics endpoints
-│
+│   ├── auth.py
+│   ├── url.py
+│   └── stats.py
 ├── templates/
-│   ├── index.html                  # Home page
-│   ├── register.html               # User registration form
-│   ├── login.html                  # User login form
-│   ├── forgot_password.html        # Password recovery form
-│   ├── dashboard.html              # User dashboard with URL management
-│   └── analytics.html              # Analytics and statistics view
-│
+│   ├── analytics.html
+│   ├── dashboard.html
+│   ├── forgot_password.html
+│   ├── index.html
+│   ├── login.html
+│   └── register.html
 ├── static/
-│   ├── css/
-│   │   └── style.css               # Global styling and responsive design
-│   │
+│   ├── css/style.css
 │   └── js/
-│       ├── auth-login.js           # Login form logic
-│       ├── auth-register.js        # Registration form logic
-│       ├── forgot_password.js      # Password recovery logic
-│       ├── dashboard.js            # Dashboard functionality
-│       └── analytics.js            # Analytics page logic
-│
+│       ├── analytics.js
+│       ├── auth-login.js
+│       ├── auth-register.js
+│       ├── dashboard.js
+│       └── forgot_password.js
 └── utils/
-    ├── __init__.py
-    ├── shortener.py                # URL shortening logic
-    └── validators.py               # Input validation utilities
+    ├── data_manager.py
+    ├── shortener.py
+    └── validators.py
 ```
 
-## 🔧 API Endpoints
+## 🔧 Application Routes
 
-### Authentication Routes
+### Frontend Pages
+- `/` - Landing page
+- `/login` - Login page
+- `/register` - Register page
+- `/forgot` - Password reset page
+- `/dashboard` - Dashboard page
+- `/analytics` - Analytics page
+
+### API Endpoints
 - `POST /api/register` - Register a new user
-- `POST /api/login` - User login
-- `POST /api/forgot-password` - Request password reset
+- `POST /api/login` - Log in and receive a JWT token
+- `POST /api/forgot-password` - Request a password reset token
 - `POST /api/reset-password` - Reset password with token
-
-### URL Routes
-- `POST /api/shorten` - Create a short URL (requires authentication)
-- `GET /api/urls` - Get all user's shortened URLs
-- `GET /api/url/<short_code>` - Retrieve original URL (public)
-- `PUT /api/url/<short_code>` - Update a short URL
-- `DELETE /api/url/<short_code>` - Delete a short URL
-
-### Statistics Routes
-- `GET /api/stats/<short_code>` - Get analytics for a specific URL
-- `GET /api/stats` - Get aggregate statistics
-- `GET /api/analytics/<short_code>` - Detailed analytics data
+- `POST /api/shorten` - Create a short URL (requires JWT)
+- `GET /api/history` - Retrieve the authenticated user's URL history
+- `GET /api/my-links` - Retrieve all authenticated user links
+- `GET /api/stats/<code>` - Get click stats for a short URL
+- `GET /<short_code>` - Redirect to the original URL
 
 ## 🛠️ Technology Stack
 
-- **Backend:** Flask 2.3.2
-- **Database:** MySQL with Flask-MySQLdb
-- **Authentication:** JWT (Flask-JWT-Extended)
-- **Security:** Bcrypt for password hashing
-- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
-- **CORS:** Enabled for API access
+- Flask
+- Flask-Bcrypt
+- Flask-CORS
+- Flask-JWT-Extended
+- JSON file storage
+- HTML, CSS, JavaScript frontend
 
 ## 📦 Dependencies
 
 ```
-Flask==2.3.2
-Flask-MySQLdb==2.0.0
-Flask-Bcrypt==1.0.1
-Flask-JWT-Extended==4.4.4
-Flask-CORS==4.0.0
-python-dotenv==1.0.0
-user-agents==2.2.0
-Werkzeug==2.3.6
-PyMySQL==1.1.0
-cryptography==41.0.1
+Flask
+Flask-Bcrypt
+Flask-Cors
+Flask-JWT-Extended
+gunicorn
+python-dotenv
 ```
 
-## 🔒 Security Features
+## 🔒 Notes
 
-- **Password Hashing** - Bcrypt encryption for all passwords
-- **JWT Authentication** - Secure token-based authentication
-- **CORS Protection** - Controlled cross-origin resource sharing
-- **Input Validation** - Server-side and client-side validation
-- **SQL Injection Prevention** - Parameterized queries
-- **Secure Session Management** - Token expiration and refresh
+- Passwords are stored hashed using bcrypt
+- JWT is used for authenticated API access
+- `data.json` stores users and URL records locally
+- No external database is required for this version
 
-## 📝 Usage Examples
+## 💡 Usage
 
-### Creating an Account
-1. Navigate to the registration page
-2. Enter your full name, email, and password
-3. Password must be at least 8 characters with mixed case and numbers
-4. Click "Register" to create your account
-
-### Shortening a URL
-1. Log in to your account
-2. Go to the dashboard
-3. Enter the long URL you want to shorten
-4. Optionally set a custom short code
-5. Click "Shorten" to generate your short link
-6. Copy and share your new short URL
-
-### Viewing Analytics
-1. From the dashboard, click on any shortened URL
-2. View click statistics and visitor information
-3. Track performance over time with interactive charts
-4. Export reports if needed
+1. Register an account
+2. Log in and open the dashboard
+3. Shorten URLs and copy the generated short link
+4. Share the short URL
+5. View history and stats for your links
 
 ## 🐛 Troubleshooting
 
-### Registration Issues
-- Ensure email format is valid (example@domain.com)
-- Password must be 8+ characters with uppercase, lowercase, and numbers
-- Verify MySQL is configured correctly in `config.py`
-
-### Login Problems
-- Verify your email and password are correct
-- Clear browser cache and cookies if having persistent issues
-- Check that the JWT token is being stored properly in localStorage
-
-### Database Connection Errors
-- Verify MySQL server is running (if using MySQL)
-- Check database credentials in `config.py`
-- Ensure the database user has proper permissions
-
-## 📚 Configuration
-
-Edit `config.py` to customize:
-- Database connection settings
-- JWT token expiration time
-- Session configuration
-- Flask app settings
-- CORS origins
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Commit your changes (`git commit -m 'Add new feature'`)
-4. Push to the branch (`git push origin feature/improvement`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 👨‍💻 Author
-
-SmartLinks Project - URL Shortener with Analytics
-
-## 🐞 Report Issues
-
-Found a bug? Have a feature request? Please open an issue on the project repository.
-
-## 🎯 Future Enhancements
-
-- [ ] Social media integration for sharing
-- [ ] Advanced filtering and search
-- [ ] Bulk URL shortening
-- [ ] Custom analytics dashboard
-- [ ] API rate limiting
-- [ ] Mobile app
-- [ ] Browser extensions
-- [ ] Integration with popular services
-
----
-
-**Happy Link Shortening! 🚀**
+- Make sure `data.json` is writable
+- Confirm the email and password used for login
+- Restart the app if the JSON file becomes corrupted
+- Check the terminal output when running `python app.py`
