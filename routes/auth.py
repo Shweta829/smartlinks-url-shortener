@@ -1,26 +1,26 @@
 from flask import Blueprint, request, jsonify, render_template
 from extensions import bcrypt
 from flask_jwt_extended import create_access_token
-import json
-import os
-from datetime import datetime
+from utils.data_manager import data_manager
 
 auth_bp = Blueprint("auth", __name__)
 
-# Mock user database (in-memory storage for now)
-USERS_FILE = os.path.join(os.path.dirname(__file__), '../users.json')
 
-def load_users():
-    """Load users from JSON file"""
-    if os.path.exists(USERS_FILE):
-        with open(USERS_FILE, 'r') as f:
-            return json.load(f)
-    return {}
+def get_user_by_email(email):
+    return data_manager.get_user_by_email(email)
 
-def save_users(users):
-    """Save users to JSON file"""
-    with open(USERS_FILE, 'w') as f:
-        json.dump(users, f, indent=2)
+
+def create_user(username, email, password):
+    return data_manager.create_user(username, email, password)
+
+
+def update_user_reset_token(user_id, reset_token):
+    return data_manager.update_user_reset_token(user_id, reset_token)
+
+
+def update_user_password(user_id, hashed_password):
+    return data_manager.update_user_password(user_id, hashed_password)
+
 
 @auth_bp.route("/api/register", methods=["POST"])
 def register():
@@ -41,30 +41,13 @@ def register():
         if "@" not in email or "." not in email:
             return jsonify({"message": "Invalid email format"}), 400
 
-        users = load_users()
+        existing_user = get_user_by_email(email)
+        if existing_user:
+            return jsonify({"message": "Email already registered"}), 409
 
-        # Check if user already exists
-        for user_id, user_data in users.items():
-            if user_data.get('email') == email:
-                return jsonify({"message": "Email already registered"}), 409
-
-        # Hash password
         hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
+        user_id = create_user(username, email, hashed_password)
 
-        # Create new user
-        user_id = str(len(users) + 1)
-        users[user_id] = {
-            "id": user_id,
-            "username": username,
-            "email": email,
-            "password": hashed_password,
-            "created_at": datetime.now().isoformat(),
-            "reset_token": None
-        }
-
-        save_users(users)
-
-        # Create JWT token
         token = create_access_token(identity=user_id)
 
         return jsonify({
@@ -93,28 +76,14 @@ def login():
         if not email or not password:
             return jsonify({"message": "Email and password required"}), 400
 
-        users = load_users()
-
-        # Find user by email
-        user_data = None
-        user_id = None
-        for uid, user in users.items():
-            if user.get('email') == email:
-                user_data = user
-                user_id = uid
-                break
-
+        user_data = get_user_by_email(email)
         if not user_data:
             return jsonify({"message": "Invalid email or password"}), 401
 
-        # Check password
-        stored_password = user_data.get('password', '')
-        
-        if not bcrypt.check_password_hash(stored_password, password):
+        if not bcrypt.check_password_hash(user_data.get('password', ''), password):
             return jsonify({"message": "Invalid email or password"}), 401
 
-        # Create JWT token
-        token = create_access_token(identity=user_id)
+        token = create_access_token(identity=user_data.get('id'))
 
         return jsonify({
             "message": "Login successful",
@@ -139,32 +108,18 @@ def forgot_password():
         if not email:
             return jsonify({"message": "Email is required"}), 400
 
-        users = load_users()
+        user_data = get_user_by_email(email)
 
-        # Find user
-        user_data = None
-        user_id = None
-        for uid, user in users.items():
-            if user.get('email') == email:
-                user_data = user
-                user_id = uid
-                break
-
-        # Always return success for security (don't reveal if email exists)
         if user_data:
-            reset_token = create_access_token(identity=user_id)
-            users[user_id]['reset_token'] = reset_token
-            save_users(users)
+            reset_token = create_access_token(identity=user_data.get('id'))
+            update_user_reset_token(user_data.get('id'), reset_token)
             print(f"Password reset token for {email}: {reset_token}")
-            # In production, send email here
             return jsonify({
                 "message": "If email exists, a reset link has been sent",
-                "reset_token": reset_token  # For testing only - remove in production
+                "reset_token": reset_token
             }), 200
-        
-        return jsonify({
-            "message": "If email exists, a reset link has been sent"
-        }), 200
+
+        return jsonify({"message": "If email exists, a reset link has been sent"}), 200
 
     except Exception as e:
         print(f"Forgot password error: {str(e)}")
@@ -185,27 +140,15 @@ def reset_password():
         if len(new_password) < 8:
             return jsonify({"message": "Password must be at least 8 characters"}), 400
 
-        users = load_users()
-
-        # Find user
-        user_data = None
-        user_id = None
-        for uid, user in users.items():
-            if user.get('email') == email:
-                user_data = user
-                user_id = uid
-                break
-
+        user_data = get_user_by_email(email)
         if not user_data:
             return jsonify({"message": "User not found"}), 404
 
-        # Hash new password
-        hashed_password = bcrypt.generate_password_hash(new_password).decode("utf-8")
+        if not user_data.get('reset_token') or user_data.get('reset_token') != reset_token:
+            return jsonify({"message": "Invalid reset token"}), 401
 
-        # Update password
-        users[user_id]['password'] = hashed_password
-        users[user_id]['reset_token'] = None
-        save_users(users)
+        hashed_password = bcrypt.generate_password_hash(new_password).decode("utf-8")
+        update_user_password(user_data.get('id'), hashed_password)
 
         return jsonify({
             "message": "Password reset successfully"

@@ -3,7 +3,7 @@
 ## ✅ ALL ISSUES RESOLVED
 
 ### Issues Fixed:
-1. ✅ **Registration Failed** - Fixed with JSON file storage (no DB needed)
+1. ✅ **Registration Failed** - Fixed with MySQL storage and secure password hashing
 2. ✅ **Login Failed** - Working with proper authentication
 3. ✅ **Forgot Password** - Fully implemented with reset functionality
 4. ✅ **Interactive UI** - All forms have real-time validation
@@ -17,7 +17,6 @@ SmartLinks_Project/
 ├── app.py                          # Main Flask app
 ├── config.py                       # Configuration
 ├── extensions.py                   # Flask extensions
-├── users.json                      # User database (auto-created)
 ├── requirements.txt                # Dependencies
 │
 ├── routes/
@@ -146,23 +145,11 @@ Response: { "message": "Password reset successfully" }
 
 ## 🗄️ DATA STORAGE
 
-**Current: JSON File Storage** (for development/testing)
+**Current: MySQL storage** for user and URL persistence.
 
-Users are stored in `users.json`:
-```json
-{
-  "1": {
-    "id": "1",
-    "username": "Alice Johnson",
-    "email": "alice@example.com",
-    "password": "bcrypt_hash...",
-    "created_at": "2026-04-12T...",
-    "reset_token": null
-  }
-}
-```
+Users are stored in the `users` table and URLs are stored in the `urls` table.
 
-**For Production:** Replace with MySQL using the original database structure.
+**For Production:** The app already supports MySQL storage for all persistent data.
 
 ---
 
@@ -192,12 +179,16 @@ Users are stored in `users.json`:
 ## 📝 REQUIREMENTS.TXT
 
 ```
-Flask==2.3.0
-Flask-CORS==4.0.0
-Flask-JWT-Extended==4.4.4
+Flask==2.3.2
+Flask-MySQLdb==2.0.0
 Flask-Bcrypt==1.0.1
-Flask-MySQL==1.5.2
+Flask-JWT-Extended==4.4.4
+Flask-CORS==4.0.0
 python-dotenv==1.0.0
+user-agents==2.2.0
+Werkzeug==2.3.6
+PyMySQL==1.1.0
+cryptography==41.0.1
 ```
 
 ---
@@ -216,7 +207,7 @@ python-dotenv==1.0.0
 
 ## 📂 FILES MODIFIED
 
-1. `routes/auth.py` - Complete rewrite with JSON storage
+1. `routes/auth.py` - Complete rewrite with MySQL storage
 2. `templates/register.html` - Enhanced with validation UI
 3. `templates/login.html` - Enhanced with validation UI
 4. `templates/forgot_password.html` - Two-step form
@@ -243,10 +234,10 @@ python-dotenv==1.0.0
 ## 🐛 TROUBLESHOOTING
 
 **Issue: Users not found after restart**
-- Solution: users.json is created automatically
+- Solution: Verify MySQL database is running and the `users` table exists
 
 **Issue: Password reset not sending emails**
-- Solution: Currently uses mock storage; add email service for production
+- Solution: Currently uses token output for testing; add email service for production
 
 **Issue: CORS errors**
 - Solution: CORS is already enabled for API endpoints

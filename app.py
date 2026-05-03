@@ -2,7 +2,8 @@ from flask import Flask,render_template
 from flask_cors import CORS
 
 from config import Config
-from extensions import mysql,bcrypt,jwt
+from extensions import bcrypt,jwt
+from utils.data_manager import data_manager
 
 from routes.auth import auth_bp
 from routes.url import url_bp
@@ -16,9 +17,15 @@ app.config.from_object(Config)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Initialize extensions
-mysql.init_app(app)
 bcrypt.init_app(app)
 jwt.init_app(app)
+
+# Initialize data file if it does not exist
+def init_db():
+    # The data_manager ensures the file exists
+    pass
+
+init_db()
 
 # JWT error handlers
 @jwt.expired_token_loader

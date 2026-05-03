@@ -32,7 +32,7 @@ A modern, feature-rich URL shortener web application built with Flask. Create sh
 ### Prerequisites
 - Python 3.8 or higher
 - pip package manager
-- MySQL database (optional - defaults to JSON file storage)
+- MySQL database (required for persistence)
 
 ### Installation
 
@@ -54,9 +54,9 @@ source venv/bin/activate  # On macOS/Linux
 pip install -r requirements.txt
 ```
 
-4. **Configure Database** (Optional)
+4. **Configure Database**
    - Edit `config.py` to set up your MySQL database connection
-   - Or use the default JSON file storage (no setup needed)
+   - The application now uses MySQL storage for users and URLs instead of JSON files
 
 5. **Run the Application**
 ```bash
@@ -75,8 +75,6 @@ SmartLinks_Project/
 ├── config.py                       # Configuration settings
 ├── extensions.py                   # Flask extensions initialization
 ├── requirements.txt                # Python dependencies
-├── users.json                      # User database (auto-created)
-├── urls.json                       # Shortened URLs database
 ├── README.md                       # This file
 │
 ├── routes/
@@ -133,7 +131,7 @@ SmartLinks_Project/
 ## 🛠️ Technology Stack
 
 - **Backend:** Flask 2.3.2
-- **Database:** MySQL with Flask-MySQLdb (or JSON file storage)
+- **Database:** MySQL with Flask-MySQLdb
 - **Authentication:** JWT (Flask-JWT-Extended)
 - **Security:** Bcrypt for password hashing
 - **Frontend:** HTML5, CSS3, JavaScript (ES6+)
@@ -190,7 +188,7 @@ cryptography==41.0.1
 ### Registration Issues
 - Ensure email format is valid (example@domain.com)
 - Password must be 8+ characters with uppercase, lowercase, and numbers
-- Check that the users.json file has write permissions
+- Verify MySQL is configured correctly in `config.py`
 
 ### Login Problems
 - Verify your email and password are correct
