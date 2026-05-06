@@ -3,21 +3,27 @@
 let browserChartInstance = null;
 let osChartInstance = null;
 let topPerformersChartInstance = null;
+let currentShortCode = '';
 
 const codeInput = document.getElementById('codeInput');
-const statsCards = document.getElementById('statsCards');
 const chartsContainer = document.getElementById('chartsContainer');
 const overviewSection = document.getElementById('overviewSection');
 const messageEl = document.getElementById('message');
+const copyCodeBtn = document.getElementById('copyCodeBtn');
 
 // ========== LOAD SINGLE URL STATS ==========
 
 async function loadStats() {
-    const code = codeInput.value.trim();
+    let code = codeInput.value.trim();
     
     if (!code) {
         showMessage('Please enter a short code', 'error');
         return;
+    }
+    
+    // Extract short code if full URL is pasted (e.g., http://127.0.0.1:5000/aX9z2 => aX9z2)
+    if (code.includes('/')) {
+        code = code.split('/').pop();
     }
     
     const token = localStorage.getItem('token');
@@ -35,8 +41,9 @@ async function loadStats() {
         
         if (!response.ok) {
             showMessage(data.message || 'URL not found', 'error');
-            statsCards.style.display = 'none';
             chartsContainer.style.display = 'none';
+            const topPerformersSection = document.getElementById('topPerformersSection');
+            if (topPerformersSection) topPerformersSection.style.display = 'none';
             return;
         }
         
@@ -83,25 +90,49 @@ async function loadAllStats() {
 
 function displayStats(stats, code) {
     // Update stat cards
-    document.getElementById('totalClicks').textContent = stats.total_clicks || 0;
-    document.getElementById('uniqueBrowsers').textContent = (stats.browser_stats || []).length;
-    document.getElementById('uniqueOS').textContent = (stats.os_stats || []).length;
-    document.getElementById('shortCodeDisplay').textContent = code;
-    
-    statsCards.style.display = 'grid';
-    chartsContainer.style.display = 'block';
+    const totalClicksEl = document.getElementById('totalClicksDisplay');
+    const shortCodeDisplayEl = document.getElementById('shortCodeDisplay');
+    const linkTitleEl = document.getElementById('linkTitle');
+
+    currentShortCode = code;
+
+    if (totalClicksEl) {
+        totalClicksEl.textContent = stats.total_clicks || 0;
+    }
+    if (shortCodeDisplayEl) {
+        shortCodeDisplayEl.textContent = code;
+    }
+    if (linkTitleEl) {
+        linkTitleEl.textContent = code;
+    }
+    if (copyCodeBtn) {
+        copyCodeBtn.textContent = code ? 'Copy' : 'Copy';
+        copyCodeBtn.disabled = !code;
+    }
+    if (code) {
+        document.title = `Analytics - ${code}`;
+    }
+
+    chartsContainer.style.display = 'grid';
+    const topPerformersSection = document.getElementById('topPerformersSection');
+    if (topPerformersSection) topPerformersSection.style.display = 'block';
     overviewSection.style.display = 'none';
-    
+
     // Update charts
-    const browserLabels = (stats.browser_stats || []).map(x => x[0] || 'Unknown');
-    const browserCounts = (stats.browser_stats || []).map(x => x[1] || 0);
-    
-    const osLabels = (stats.os_stats || []).map(x => x[0] || 'Unknown');
-    const osCounts = (stats.os_stats || []).map(x => x[1] || 0);
-    
-    createBrowserChart(browserLabels, browserCounts);
-    createOSChart(osLabels, osCounts);
-    createTopPerformersChart(browserLabels, browserCounts, osLabels, osCounts);
+    try {
+        const browserLabels = (stats.browser_stats || []).map(x => x[0] || 'Unknown');
+        const browserCounts = (stats.browser_stats || []).map(x => x[1] || 0);
+        
+        const osLabels = (stats.os_stats || []).map(x => x[0] || 'Unknown');
+        const osCounts = (stats.os_stats || []).map(x => x[1] || 0);
+        
+        createBrowserChart(browserLabels, browserCounts);
+        createOSChart(osLabels, osCounts);
+        createTopPerformersChart(browserLabels, browserCounts, osLabels, osCounts);
+    } catch (error) {
+        console.error('Error creating charts:', error);
+        showMessage('Error displaying charts: ' + error.message, 'error');
+    }
 }
 
 // ========== DISPLAY ALL URLS STATS ==========
@@ -112,7 +143,6 @@ function displayAllURLsStats(urls) {
         return;
     }
     
-    statsCards.style.display = 'none';
     chartsContainer.style.display = 'none';
     overviewSection.style.display = 'block';
     
@@ -155,18 +185,18 @@ function createBrowserChart(labels, data) {
     }
     
     browserChartInstance = new Chart(ctx, {
-        type: 'doughnut',
+        type: 'pie',
         data: {
             labels: labels,
             datasets: [{
                 data: data,
                 backgroundColor: [
-                    '#a78bfa',
-                    '#60a5fa',
-                    '#34d399',
-                    '#fbbf24',
-                    '#f87171',
-                    '#818cf8'
+                    '#3b82f6',
+                    '#10b981',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#8b5cf6',
+                    '#06b6d4'
                 ],
                 borderColor: '#1e293b',
                 borderWidth: 2
@@ -179,10 +209,18 @@ function createBrowserChart(labels, data) {
                 legend: {
                     position: 'bottom',
                     labels: {
-                        color: '#e0e7ff',
-                        font: { size: 12 },
+                        color: '#1f2937',
+                        font: { size: 12, weight: '500' },
                         padding: 15
                     }
+                }
+            },
+            onClick: (event, elements) => {
+                if (elements.length > 0) {
+                    const index = elements[0].index;
+                    const selectedLabel = labels[index] || 'Unknown';
+                    const selectedValue = data[index] || 0;
+                    showMessage(`${selectedLabel}: ${selectedValue} clicks`, 'success');
                 }
             }
         }
@@ -203,8 +241,8 @@ function createOSChart(labels, data) {
             datasets: [{
                 label: 'Clicks by OS',
                 data: data,
-                backgroundColor: '#a78bfa',
-                borderColor: '#7c3aed',
+                backgroundColor: '#3b82f6',
+                borderColor: '#1e40af',
                 borderWidth: 2,
                 borderRadius: 8
             }]
@@ -216,17 +254,25 @@ function createOSChart(labels, data) {
             plugins: {
                 legend: {
                     labels: {
-                        color: '#e0e7ff'
+                        color: '#1f2937'
                     }
                 }
             },
             scales: {
                 x: {
-                    ticks: { color: '#a78bfa' },
-                    grid: { color: 'rgba(167, 139, 250, 0.1)' }
+                    ticks: { color: '#6b7280' },
+                    grid: { color: 'rgba(107, 114, 128, 0.1)' }
                 },
                 y: {
-                    ticks: { color: '#a78bfa' }
+                    ticks: { color: '#6b7280' }
+                }
+            },
+            onClick: (event, elements) => {
+                if (elements.length > 0) {
+                    const index = elements[0].index;
+                    const selectedLabel = labels[index] || 'Unknown';
+                    const selectedValue = data[index] || 0;
+                    showMessage(`${selectedLabel}: ${selectedValue} clicks`, 'success');
                 }
             }
         }
@@ -260,16 +306,16 @@ function createTopPerformersChart(browserLabels, browserCounts, osLabels, osCoun
                 label: 'Clicks',
                 data: topCounts,
                 backgroundColor: [
-                    '#a78bfa',
-                    '#c4b5fd',
-                    '#ddd6fe',
-                    '#ede9fe',
-                    '#f3e8ff',
-                    '#fae8ff',
-                    '#fef3c7',
-                    '#fecaca'
+                    '#3b82f6',
+                    '#60a5fa',
+                    '#93c5fd',
+                    '#10b981',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#8b5cf6',
+                    '#06b6d4'
                 ],
-                borderColor: '#7c3aed',
+                borderColor: '#1e40af',
                 borderWidth: 2,
                 borderRadius: 8
             }]
@@ -281,18 +327,18 @@ function createTopPerformersChart(browserLabels, browserCounts, osLabels, osCoun
             plugins: {
                 legend: {
                     labels: {
-                        color: '#e0e7ff'
+                        color: '#1f2937'
                     }
                 }
             },
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: { color: '#a78bfa' },
-                    grid: { color: 'rgba(167, 139, 250, 0.1)' }
+                    ticks: { color: '#6b7280' },
+                    grid: { color: 'rgba(107, 114, 128, 0.1)' }
                 },
                 x: {
-                    ticks: { color: '#a78bfa' }
+                    ticks: { color: '#6b7280' }
                 }
             }
         }
@@ -679,11 +725,11 @@ function createTotalOsChart(labels, data) {
             scales: {
                 x: {
                     beginAtZero: true,
-                    ticks: { color: '#a78bfa' },
-                    grid: { color: 'rgba(167, 139, 250, 0.1)' }
+                    ticks: { color: '#6b7280' },
+                    grid: { color: 'rgba(107, 114, 128, 0.1)' }
                 },
                 y: {
-                    ticks: { color: '#a78bfa' }
+                    ticks: { color: '#6b7280' }
                 }
             },
             onClick: (event, elements) => {
@@ -761,12 +807,12 @@ function createClicksPerUrlChart(labels, data) {
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: { color: '#a78bfa' },
-                    grid: { color: 'rgba(167, 139, 250, 0.1)' }
+                    ticks: { color: '#6b7280' },
+                    grid: { color: 'rgba(107, 114, 128, 0.1)' }
                 },
                 x: {
-                    ticks: { color: '#a78bfa' },
-                    grid: { color: 'rgba(167, 139, 250, 0.1)' }
+                    ticks: { color: '#6b7280' },
+                    grid: { color: 'rgba(107, 114, 128, 0.1)' }
                 }
             },
             onClick: (event, elements) => {
@@ -782,6 +828,18 @@ function createClicksPerUrlChart(labels, data) {
 }
 
 // ========== MESSAGE DISPLAY ==========
+
+function copyShortCode() {
+    if (!currentShortCode) {
+        showMessage('No short code selected yet', 'error');
+        return;
+    }
+    navigator.clipboard.writeText(currentShortCode).then(() => {
+        showMessage(`Copied ${currentShortCode} to clipboard`, 'success');
+    }).catch(() => {
+        showMessage('Unable to copy to clipboard', 'error');
+    });
+}
 
 function showMessage(message, type) {
     messageEl.textContent = message;
@@ -825,4 +883,12 @@ function logout() {
 
 window.addEventListener('load', () => {
     loadUserInfo();
+    if (codeInput) {
+        codeInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                loadStats();
+            }
+        });
+    }
 });

@@ -29,9 +29,9 @@ const validateEmail = (value) => {
 const validatePassword = (value) => {
     if (!value) return { valid: false, message: 'Password is required' };
     if (value.length < 8) return { valid: false, message: 'Minimum 8 characters' };
-    if (!/[A-Z]/.test(value)) return { valid: false, message: 'Need uppercase letter' };
-    if (!/[a-z]/.test(value)) return { valid: false, message: 'Need lowercase letter' };
-    if (!/[0-9]/.test(value)) return { valid: false, message: 'Need a number' };
+    if (!/[A-Z]/.test(value)) return { valid: false, message: 'Need uppercase letter (A-Z)' };
+    if (!/[a-z]/.test(value)) return { valid: false, message: 'Need lowercase letter (a-z)' };
+    if (!/[0-9]/.test(value)) return { valid: false, message: 'Need a number (0-9)' };
     return { valid: true };
 };
 
@@ -193,7 +193,8 @@ async function submitForm() {
         if (response.ok) {
             showMessage('Account created successfully! Redirecting...', 'success');
             if (data.token) localStorage.setItem('token', data.token);
-            setTimeout(() => window.location.href = '/login', 1500);
+            if (data.user) localStorage.setItem('userInfo', JSON.stringify(data.user));
+            setTimeout(() => window.location.href = '/dashboard', 1500);
         } else {
             showMessage(data.message || 'Registration failed', 'error');
             submitBtn.disabled = false;

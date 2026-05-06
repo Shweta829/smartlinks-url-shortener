@@ -7,6 +7,78 @@
       "password": "hashedpass",
       "created_at": "2026-05-02T19:14:07.181716",
       "reset_token": null
+    },
+    {
+      "id": 2,
+      "username": "Kavya",
+      "email": "kavya89@gmail.com",
+      "password": "$2b$12$Feczc3r6iGI77qohjfx.4uI9UjDYnlN5IuMUSi/qODgGXLLGWXHDq",
+      "created_at": "2026-05-05T22:58:52.629554",
+      "reset_token": null
+    },
+    {
+      "id": 3,
+      "username": "Ratnshree",
+      "email": "ratnshree2026@gmail.com",
+      "password": "$2b$12$GmjKb5I/x.MYba2uyHnLquUeJx3.Pryyg65dkThRhVwftu3W3dpba",
+      "created_at": "2026-05-05T23:07:05.776372",
+      "reset_token": null
+    },
+    {
+      "id": 4,
+      "username": "Nagaraj",
+      "email": "nagu@gmail.com",
+      "password": "$2b$12$ZMs5gUa/ORMxg/oT8JCrouIRtI3Pxn21lAo2JHnaVj7YsAzCtRWCa",
+      "created_at": "2026-05-06T14:01:05.815430",
+      "reset_token": null
+    },
+    {
+      "id": 5,
+      "username": "Anjali",
+      "email": "anjali2000@gmail.com",
+      "password": "$2b$12$gSUht3GJwsxOiFfDDtsNO.S0t05ydTtGdT47Z6zlHmTP8OienefgK",
+      "created_at": "2026-05-06T14:31:12.038831",
+      "reset_token": null
+    },
+    {
+      "id": 6,
+      "username": "DebugUser",
+      "email": "debuguser123456@example.com",
+      "password": "$2b$12$zNS9.i5v08YYC7A98OBkh.B9MB.Q2KexAKWqR4AZRqw0mqcswch8C",
+      "created_at": "2026-05-06T14:42:14.595279",
+      "reset_token": null
+    },
+    {
+      "id": 7,
+      "username": "DebugUser2",
+      "email": "debuguser2@example.com",
+      "password": "$2b$12$A1zfJBYNkjZGtV9ZtRQmT.rwOnEVTYsXAxuZKphbH6ypf7f.GqsO2",
+      "created_at": "2026-05-06T14:45:24.948953",
+      "reset_token": null
+    },
+    {
+      "id": 8,
+      "username": "DebugUser3",
+      "email": "debuguser3@example.com",
+      "password": "$2b$12$kOn2PTRvzcqDYTCloQudFOVgjH7V/mR3qB3D/jOP2SmYsh.5Zn66C",
+      "created_at": "2026-05-06T14:52:17.544779",
+      "reset_token": null
+    },
+    {
+      "id": 9,
+      "username": "DebugUser",
+      "email": "debuguser_1778059594@example.com",
+      "password": "$2b$12$XgjEfpXFxPVrJaAMwTZDYuYhVJfWO0hAGXZVq/wb4omJORTH.w.5G",
+      "created_at": "2026-05-06T14:56:34.853000",
+      "reset_token": null
+    },
+    {
+      "id": 10,
+      "username": "Bhagya",
+      "email": "bhagya_2000@gmail.com",
+      "password": "$2b$12$IQah.3xMMiTZTfzVhMeJAu3nkb5/xedeWKNJZhO3CMDkJmmfw4G5m",
+      "created_at": "2026-05-06T15:01:26.420569",
+      "reset_token": null
     }
   ],
   "urls": [
@@ -17,6 +89,143 @@
       "short_code": "abc123",
       "created_at": "2026-05-02T19:14:35.983989",
       "clicks": 1
+    },
+    {
+      "id": 2,
+      "user_id": 9,
+      "original_url": "https://example.com/test",
+      "short_code": "jX3dyQ",
+      "created_at": "2026-05-06T14:56:34.900331",
+      "clicks": 0
+    },
+    {
+      "id": 3,
+      "user_id": 5,
+      "original_url": "https://chatgpt.com/c/69fafc89-fbcc-8324-869e-d10b6271ca58",
+      "short_code": "g6lxXY",
+      "created_at": "2026-05-06T14:59:21.679034",
+      "clicks": 0
+    },
+    {
+      "id": 4,
+      "user_id": 10,
+      "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+      "short_code": "JUfKy5",
+      "created_at": "2026-05-06T15:02:27.428220",
+      "clicks": 0
+    },
+    {
+      "id": 5,
+      "user_id": 10,
+      "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+      "short_code": "0mfJ1Y",
+      "created_at": "2026-05-06T15:03:22.309473",
+      "clicks": 2
+    },
+    {
+      "id": 6,
+      "user_id": 10,
+      "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+      "short_code": "ajTjc5",
+      "created_at": "2026-05-06T15:13:19.563925",
+      "clicks": 2
+    },
+    {
+      "id": 7,
+      "user_id": 10,
+      "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+      "short_code": "nEXZ9j",
+      "created_at": "2026-05-06T15:23:28.228353",
+      "clicks": 0
+    },
+    {
+      "id": 8,
+      "user_id": 10,
+      "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+      "short_code": "4CYELy",
+      "created_at": "2026-05-06T15:23:49.962683",
+      "clicks": 2
+    },
+    {
+      "id": 9,
+      "user_id": 10,
+      "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+      "short_code": "v4442T",
+      "created_at": "2026-05-06T15:30:53.326746",
+      "clicks": 0
+    },
+    {
+      "id": 10,
+      "user_id": 10,
+      "original_url": "https://www.naukri.com/mnjuser/homepage?utm_source=google&utm_medium=cpc&utm_campaign=Brand",
+      "short_code": "V23nAC",
+      "created_at": "2026-05-06T21:51:44.594082",
+      "clicks": 0
+    },
+    {
+      "id": 11,
+      "user_id": 10,
+      "original_url": "https://chatgpt.com/c/69da7cd9-5e48-8323-b545-8a2fa5651050",
+      "short_code": "ji0xRA",
+      "created_at": "2026-05-06T21:52:02.537394",
+      "clicks": 3
+    },
+    {
+      "id": 12,
+      "user_id": 10,
+      "original_url": "https://chatgpt.com/c/69da7cd9-5e48-8323-b545-8a2fa5651050",
+      "short_code": "JneBCG",
+      "created_at": "2026-05-06T21:57:50.207599",
+      "clicks": 3,
+      "browser_stats": {
+        "Chrome": 3
+      },
+      "os_stats": {
+        "Windows": 3
+      }
+    },
+    {
+      "id": 13,
+      "user_id": 10,
+      "original_url": "https://github.com/",
+      "short_code": "Qvd6Kb",
+      "created_at": "2026-05-06T22:04:59.246334",
+      "clicks": 2,
+      "browser_stats": {
+        "Chrome": 2
+      },
+      "os_stats": {
+        "Windows": 2
+      }
+    },
+    {
+      "id": 14,
+      "user_id": 10,
+      "original_url": "https://chatgpt.com/c/69fb704d-6c0c-8321-9e28-6d9f6bf292ff",
+      "short_code": "XZf6ad",
+      "created_at": "2026-05-06T22:18:24.398376",
+      "clicks": 2,
+      "browser_stats": {
+        "Chrome": 2
+      },
+      "os_stats": {
+        "Windows": 2
+      }
+    },
+    {
+      "id": 15,
+      "user_id": 10,
+      "original_url": "https://prepinsta.com/interview-preparation/technical-interview-questions/most-asked-coding-questions-in-placements/",
+      "short_code": "7Ra8Ry",
+      "created_at": "2026-05-06T22:30:24.911897",
+      "clicks": 4,
+      "browser_stats": {
+        "Chrome": 2,
+        "Edge": 2
+      },
+      "os_stats": {
+        "Windows": 4
+      }
     }
   ]
 }

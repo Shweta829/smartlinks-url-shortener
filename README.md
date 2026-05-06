@@ -6,7 +6,6 @@ A Flask-based URL shortener with user authentication, link history, and click tr
 
 - **User registration** with email validation and secure password hashing
 - **Login** with JWT-based authentication
-- **Forgot password** via reset token
 - **URL shortening** with automatic short-code generation
 - **Personal link history** for authenticated users
 - **Redirect tracking** for short URLs
@@ -63,7 +62,6 @@ SmartLinks_Project/
 ├── templates/
 │   ├── analytics.html
 │   ├── dashboard.html
-│   ├── forgot_password.html
 │   ├── index.html
 │   ├── login.html
 │   └── register.html
@@ -73,8 +71,7 @@ SmartLinks_Project/
 │       ├── analytics.js
 │       ├── auth-login.js
 │       ├── auth-register.js
-│       ├── dashboard.js
-│       └── forgot_password.js
+│       └── dashboard.js
 └── utils/
     ├── data_manager.py
     ├── shortener.py
@@ -87,15 +84,12 @@ SmartLinks_Project/
 - `/` - Landing page
 - `/login` - Login page
 - `/register` - Register page
-- `/forgot` - Password reset page
 - `/dashboard` - Dashboard page
 - `/analytics` - Analytics page
 
 ### API Endpoints
 - `POST /api/register` - Register a new user
 - `POST /api/login` - Log in and receive a JWT token
-- `POST /api/forgot-password` - Request a password reset token
-- `POST /api/reset-password` - Reset password with token
 - `POST /api/shorten` - Create a short URL (requires JWT)
 - `GET /api/history` - Retrieve the authenticated user's URL history
 - `GET /api/my-links` - Retrieve all authenticated user links

@@ -77,7 +77,8 @@ async function shortenUrl() {
     const token = localStorage.getItem('token');
     
     if (!token) {
-        window.location.href = '/login';
+        showMessage('No authentication token found. Please login again.', 'error');
+        setTimeout(() => { window.location.href = '/login'; }, 1500);
         return;
     }
     
@@ -105,7 +106,16 @@ async function shortenUrl() {
             urlInput.classList.remove('valid', 'error');
             loadHistory();
         } else {
-            showMessage(data.message || 'Failed to shorten URL', 'error');
+            if (response.status === 401) {
+                showMessage('Session expired. Please login again.', 'error');
+                localStorage.removeItem('token');
+                localStorage.removeItem('userInfo');
+                setTimeout(() => { window.location.href = '/login'; }, 1500);
+            } else if (response.status === 422) {
+                showMessage('Invalid URL format. Please check and try again.', 'error');
+            } else {
+                showMessage(data.message || 'Failed to shorten URL', 'error');
+            }
         }
     } catch (error) {
         console.error('Error:', error);
@@ -217,5 +227,38 @@ function logout() {
 
 window.addEventListener('load', () => {
     loadUserInfo();
+    // Test token validity by calling a simple API
+    testTokenValidity();
     loadHistory();
 });
+
+// Test if token is valid
+async function testTokenValidity() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    
+    try {
+        const response = await fetch('/api/history', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (response.status === 401) {
+            // Token is invalid or expired, clear it and redirect to login
+            localStorage.removeItem('token');
+            localStorage.removeItem('userInfo');
+            showMessage('Your session has expired. Please login again.', 'error');
+            setTimeout(() => { window.location.href = '/login'; }, 1500);
+        } else if (response.ok) {
+            // Token is valid, load user data
+            const data = await response.json();
+            // Store user info if not already stored
+            if (!localStorage.getItem('userInfo') && data.user) {
+                localStorage.setItem('userInfo', JSON.stringify(data.user));
+                loadUserInfo();
+            }
+        }
+    } catch (error) {
+        console.error('Token test error:', error);
+        // Don't redirect on network errors, just log
+    }
+}

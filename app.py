@@ -1,5 +1,6 @@
 from flask import Flask,render_template
 from flask_cors import CORS
+from datetime import timedelta
 
 from config import Config
 from extensions import bcrypt,jwt
@@ -12,6 +13,19 @@ from routes.stats import stats_bp
 app=Flask(__name__)
 
 app.config.from_object(Config)
+
+# Ensure JWT secret keys are set with proper fallback
+if not app.config.get('SECRET_KEY'):
+    app.config['SECRET_KEY'] = 'default_secret_key_change_in_production'
+    
+if not app.config.get('JWT_SECRET_KEY'):
+    app.config['JWT_SECRET_KEY'] = app.config.get('SECRET_KEY')
+
+# JWT Configuration
+app.config['JWT_TOKEN_LOCATION'] = ['headers']
+app.config['JWT_HEADER_NAME'] = 'Authorization'
+app.config['JWT_HEADER_TYPE'] = 'Bearer'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=7)
 
 # CORS configuration
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -56,10 +70,6 @@ def login_page():
 @app.route("/register")
 def register_page():
     return render_template("register.html")
-
-@app.route("/forgot")
-def forgot_page():
-    return render_template("forgot_password.html")
 
 @app.route("/dashboard")
 def dashboard_page():

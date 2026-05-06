@@ -18,6 +18,44 @@ def generate_code():
             return code
 
 
+def normalize_user_id(user_id):
+    if isinstance(user_id, str) and user_id.isdigit():
+        return int(user_id)
+    return user_id
+
+
+def parse_browser(user_agent):
+    ua = (user_agent or "").lower()
+    if "edg" in ua or "edge" in ua:
+        return "Edge"
+    if "opr" in ua or "opera" in ua:
+        return "Opera"
+    if "chrome" in ua and "chromium" not in ua and "edg" not in ua and "opr" not in ua:
+        return "Chrome"
+    if "firefox" in ua:
+        return "Firefox"
+    if "safari" in ua and "chrome" not in ua and "chromium" not in ua:
+        return "Safari"
+    if "trident" in ua or "msie" in ua:
+        return "Internet Explorer"
+    return "Other"
+
+
+def parse_os(user_agent):
+    ua = (user_agent or "").lower()
+    if "windows" in ua:
+        return "Windows"
+    if "iphone" in ua or "ipad" in ua or "ipod" in ua:
+        return "iOS"
+    if "mac os x" in ua or "macintosh" in ua:
+        return "macOS"
+    if "android" in ua:
+        return "Android"
+    if "linux" in ua:
+        return "Linux"
+    return "Other"
+
+
 def serialize_urls(rows):
     # rows is already list of dicts with isoformat dates
     return rows
@@ -32,7 +70,7 @@ def shorten():
         if not original_url:
             return jsonify({"message": "URL is required"}), 400
 
-        user_id = get_jwt_identity()
+        user_id = normalize_user_id(get_jwt_identity())
         short_code = generate_code()
 
         url_entry = data_manager.create_url(user_id, original_url, short_code)
@@ -58,7 +96,11 @@ def redirect_url(code):
         if not url_entry:
             return jsonify({"message": "URL not found"}), 404
 
-        data_manager.increment_clicks(code)
+        user_agent = request.headers.get("User-Agent", "")
+        browser = parse_browser(user_agent)
+        os_name = parse_os(user_agent)
+
+        data_manager.increment_clicks(code, browser=browser, os=os_name)
 
         return redirect(url_entry["original_url"])
 
@@ -70,7 +112,7 @@ def redirect_url(code):
 def history():
     """Get user's shortened URLs history"""
     try:
-        user_id = get_jwt_identity()
+        user_id = normalize_user_id(get_jwt_identity())
 
         user_urls = data_manager.get_user_urls(user_id)
 
@@ -87,7 +129,7 @@ def history():
 def mylinks():
     """Get all links for current user"""
     try:
-        user_id = get_jwt_identity()
+        user_id = normalize_user_id(get_jwt_identity())
 
         user_urls = data_manager.get_user_urls(user_id)
         

@@ -126,6 +126,11 @@ async function submitForm() {
             // Store token
             localStorage.setItem('token', data.token);
             
+            // Store user info
+            if (data.user) {
+                localStorage.setItem('userInfo', JSON.stringify(data.user));
+            }
+            
             // Store email if "Remember Me" is checked
             if (rememberMeCheckbox.checked) {
                 localStorage.setItem('rememberedEmail', email);

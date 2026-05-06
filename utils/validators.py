@@ -17,14 +17,14 @@ def validate_url(url: str) -> Tuple[bool, str]:
 
 def validate_password(password: str) -> Tuple[bool, str]:
     """Validate password strength"""
-    if len(password) < 6:
-        return False, "Password must be at least 6 characters"
+    if len(password) < 8:
+        return False, "Password must be at least 8 characters"
     if not re.search(r'[A-Z]', password):
-        return False, "Password must contain at least one uppercase letter"
+        return False, "Password must contain at least one uppercase letter (A-Z)"
     if not re.search(r'[a-z]', password):
-        return False, "Password must contain at least one lowercase letter"
+        return False, "Password must contain at least one lowercase letter (a-z)"
     if not re.search(r'[0-9]', password):
-        return False, "Password must contain at least one digit"
+        return False, "Password must contain at least one digit (0-9)"
     return True, "Password is strong"
 
 def validate_username(username: str) -> Tuple[bool, str]:
