@@ -2,7 +2,6 @@
 
 let browserChartInstance = null;
 let osChartInstance = null;
-let topPerformersChartInstance = null;
 let currentShortCode = '';
 
 const codeInput = document.getElementById('codeInput');
@@ -42,8 +41,6 @@ async function loadStats() {
         if (!response.ok) {
             showMessage(data.message || 'URL not found', 'error');
             chartsContainer.style.display = 'none';
-            const topPerformersSection = document.getElementById('topPerformersSection');
-            if (topPerformersSection) topPerformersSection.style.display = 'none';
             return;
         }
         
@@ -114,8 +111,6 @@ function displayStats(stats, code) {
     }
 
     chartsContainer.style.display = 'grid';
-    const topPerformersSection = document.getElementById('topPerformersSection');
-    if (topPerformersSection) topPerformersSection.style.display = 'block';
     overviewSection.style.display = 'none';
 
     // Update charts
@@ -128,7 +123,6 @@ function displayStats(stats, code) {
         
         createBrowserChart(browserLabels, browserCounts);
         createOSChart(osLabels, osCounts);
-        createTopPerformersChart(browserLabels, browserCounts, osLabels, osCounts);
     } catch (error) {
         console.error('Error creating charts:', error);
         showMessage('Error displaying charts: ' + error.message, 'error');
@@ -279,71 +273,7 @@ function createOSChart(labels, data) {
     });
 }
 
-function createTopPerformersChart(browserLabels, browserCounts, osLabels, osCounts) {
-    const ctx = document.getElementById('topPerformersChart').getContext('2d');
-    
-    if (topPerformersChartInstance) {
-        topPerformersChartInstance.destroy();
-    }
-    
-    // Combine all data
-    const allLabels = [...browserLabels, ...osLabels];
-    const allCounts = [...browserCounts, ...osCounts];
-    
-    // Sort and get top 8
-    const combined = allLabels.map((label, i) => ({ label, count: allCounts[i] }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 8);
-    
-    const topLabels = combined.map(x => x.label);
-    const topCounts = combined.map(x => x.count);
-    
-    topPerformersChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: topLabels,
-            datasets: [{
-                label: 'Clicks',
-                data: topCounts,
-                backgroundColor: [
-                    '#3b82f6',
-                    '#60a5fa',
-                    '#93c5fd',
-                    '#10b981',
-                    '#f59e0b',
-                    '#ef4444',
-                    '#8b5cf6',
-                    '#06b6d4'
-                ],
-                borderColor: '#1e40af',
-                borderWidth: 2,
-                borderRadius: 8
-            }]
-        },
-        options: {
-            indexAxis: 'x',
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#1f2937'
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { color: '#6b7280' },
-                    grid: { color: 'rgba(107, 114, 128, 0.1)' }
-                },
-                x: {
-                    ticks: { color: '#6b7280' }
-                }
-            }
-        }
-    });
-}
+
 
 // ========== TOTAL CLICKS ANALYSIS ==========
 
